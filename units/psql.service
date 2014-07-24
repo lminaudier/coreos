@@ -1,0 +1,8 @@
+[Unit]
+Description=psql - PostgreSQL CLI Tool
+Requires=docker.service postgresql.service
+After=docker.service postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker run --interactive --tty --link=db:db --rm postgres sh -c 'exec psql -h "$DB_PORT_5432_TCP_ADDR" -p "$DB_PORT_5432_TCP_PORT" -U postgres'
