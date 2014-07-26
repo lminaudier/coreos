@@ -4,7 +4,7 @@ Requires=docker.service
 After=docker.service
 
 [Service]
-ExecStart=/bin/bash -c "/usr/bin/docker start -a db || /usr/bin/docker run --name=db --rm postgres"
+ExecStart=/bin/bash -c "/usr/bin/docker start db || /usr/bin/docker run --name=db postgres"
 ExecStartPost=/usr/bin/etcdctl set /domains/leadformance.com/%H:%i running
-ExecStop=/usr/bin/docker stop db
+ExecStop=/bin/bash -c "/usr/bin/docker stop db && /usr/bin/docker rm db"
 ExecStopPost=/usr/bin/etcdctl rm /domains/leadformance.com/%H:%i
