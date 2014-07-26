@@ -1,7 +1,7 @@
 [Unit]
 Description=PostgreSQL database
-Requires=docker.service
-After=docker.service
+Requires=docker.service etcd.service
+After=docker.service etcd.service
 
 [Service]
 ExecStart=/bin/bash -c "/usr/bin/docker start db || /usr/bin/docker run --name=db postgres"
