@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run --name redis-cli --interactive --tty --link redis:redis --rm redis sh -c 'exec redis-cli -h "$REDIS_PORT_6379_TCP_ADDR" -p "$REDIS_PORT_6379_TCP_PORT"'

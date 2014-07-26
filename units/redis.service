@@ -1,0 +1,10 @@
+[Unit]
+Description=Redis database
+Requires=docker.service etcd.service
+After=docker.service etcd.service
+
+[Service]
+ExecStart=/bin/bash -c "/usr/bin/docker start redis || /usr/bin/docker run --name=redis redis"
+ExecStartPost=/usr/bin/etcdctl set /domains/leadformance.com/%H:%i running
+ExecStop=/bin/bash -c "/usr/bin/docker stop redis && /usr/bin/docker rm redis"
+ExecStopPost=/usr/bin/etcdctl rm /domains/leadformance.com/%H:%i
