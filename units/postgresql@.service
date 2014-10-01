@@ -2,9 +2,17 @@
 Description=PostgreSQL database
 After=docker.service
 After=etcd.service
+Requires=postgresql-discovery@%i.service
 
 [Service]
-ExecStart=/bin/bash -c "/usr/bin/docker start db || /usr/bin/docker run --name=db postgres"
-ExecStartPost=/usr/bin/etcdctl set /domains/leadformance.com/%H:%i running
-ExecStop=/bin/bash -c "/usr/bin/docker stop db && /usr/bin/docker rm db"
-ExecStopPost=/usr/bin/etcdctl rm /domains/leadformance.com/%H:%i
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=/etc/environment
+ExecStartPre=-/usr/bin/docker kill postgresql%i
+ExecStartPre=-/usr/bin/docker rm postgresql%i
+ExecStartPre=/usr/bin/docker pull postgres
+ExecStart=/usr/bin/docker run --name postgresql%i -p ${COREOS_PUBLIC_IPV4}:%i:5432 postgres
+ExecStop=/usr/bin/docker stop postgresql%i
+
+[X-Fleet]
+X-Conflicts=postgresql@*.service
