@@ -1,7 +1,7 @@
 [Unit]
 Description=Redis database
-Requires=docker.service etcd.service
-After=docker.service etcd.service
+After=docker.service
+After=etcd.service
 
 [Service]
 ExecStart=/bin/bash -c "/usr/bin/docker start redis || /usr/bin/docker run --name=redis redis"
